@@ -27,8 +27,10 @@ async def get_transcript(request: VideoRequest):
         raise HTTPException(status_code=400, detail="Invalid YouTube URL")
     
     try:
-        transcript_list = YouTubeTranscriptApi.get_transcript(video_id, languages=['vi', 'en'])
-        transcript_text = ' '.join([t['text'] for t in transcript_list])
+        # Cú pháp mới của youtube-transcript-api
+        ytt_api = YouTubeTranscriptApi()
+        transcript_list = ytt_api.fetch(video_id)
+        transcript_text = ' '.join([t.text for t in transcript_list])
         return {
             "video_url": request.video_url,
             "transcript": transcript_text
